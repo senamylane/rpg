@@ -12,6 +12,12 @@ public abstract class GameCharacter {
     private Long id;
     protected int health;
     protected int mana;
+    protected int force;
+    protected int dexterity;
+    protected int intelligence;
+    protected int constitution;
+    protected int wisdom;
+    protected int charisma;
     protected String name;
     protected String charClass;
 
@@ -63,5 +69,53 @@ public abstract class GameCharacter {
 
     protected void setCharClass(String charClass) {
         this.charClass = charClass;
+    }
+
+    public int getForce() {
+        return force;
+    }
+
+    public void setForce(int force) {
+        this.force = force;
+    }
+
+    public int getDexterity() {
+        return dexterity;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public int getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public int getConstitution() {
+        return constitution;
+    }
+
+    public void setConstitution(int constitution) {
+        this.constitution = constitution;
+    }
+
+    public int getWisdom() {
+        return wisdom;
+    }
+
+    public void setWisdom(int wisdom) {
+        this.wisdom = wisdom;
+    }
+
+    public int getCharisma() {
+        return charisma;
+    }
+
+    public void setCharisma(int charisma) {
+        this.charisma = charisma;
     }
 }
