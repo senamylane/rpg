@@ -1,5 +1,6 @@
 package com.example.rpg.gameCharacter;
 
+import com.example.rpg.enemy.Enemy;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,6 +38,10 @@ public abstract class GameCharacter {
                 ", mana=" + mana +
                 ", class=" + charClass +
                 '}';
+    }
+
+    public void attack(Enemy enemy) {
+
     }
 
     public int getHealth() {
