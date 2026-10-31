@@ -1,10 +1,12 @@
 package com.example.rpg.gameCharacter;
 
 import com.example.rpg.enemy.Enemy;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.rpg.equipment.ChestArmor;
+import com.example.rpg.equipment.Equipment;
+import com.example.rpg.equipment.Weapon;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public abstract class GameCharacter {
@@ -12,7 +14,9 @@ public abstract class GameCharacter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     protected int health;
+    protected int maxHealth;
     protected int mana;
+    protected int maxMana;
     protected int force;
     protected int dexterity;
     protected int intelligence;
@@ -21,6 +25,12 @@ public abstract class GameCharacter {
     protected int charisma;
     protected String name;
     protected String charClass;
+    protected List<Equipment> inventory;
+    @ManyToOne
+    protected Weapon weapon;
+    @ManyToOne
+    protected ChestArmor chestArmor;
+
 
     public GameCharacter(String name) {
         this.name = name;
@@ -48,24 +58,12 @@ public abstract class GameCharacter {
         return health;
     }
 
-    protected void setHealth(int health) {
-        this.health = health;
-    }
-
     public int getMana() {
         return mana;
     }
 
-    protected void setMana(int mana) {
-        this.mana = mana;
-    }
-
     public String getName() {
         return name;
-    }
-
-    protected void setName(String name) {
-        this.name = name;
     }
 
     public String getCharClass() {
@@ -80,47 +78,31 @@ public abstract class GameCharacter {
         return force;
     }
 
-    public void setForce(int force) {
-        this.force = force;
-    }
-
     public int getDexterity() {
         return dexterity;
-    }
-
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
     }
 
     public int getIntelligence() {
         return intelligence;
     }
 
-    public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
-    }
-
     public int getConstitution() {
         return constitution;
-    }
-
-    public void setConstitution(int constitution) {
-        this.constitution = constitution;
     }
 
     public int getWisdom() {
         return wisdom;
     }
 
-    public void setWisdom(int wisdom) {
-        this.wisdom = wisdom;
-    }
-
     public int getCharisma() {
         return charisma;
     }
 
-    public void setCharisma(int charisma) {
-        this.charisma = charisma;
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 }
