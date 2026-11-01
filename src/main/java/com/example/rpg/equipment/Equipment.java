@@ -1,9 +1,11 @@
 package com.example.rpg.equipment;
 
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@MappedSuperclass
 public abstract class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

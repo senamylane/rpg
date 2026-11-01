@@ -1,8 +1,8 @@
 package com.example.rpg.equipment;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
+@MappedSuperclass
 public abstract class Armor extends Equipment {
     protected int defense;
 }

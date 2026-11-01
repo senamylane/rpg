@@ -1,31 +1,40 @@
 package com.example.rpg.gameCharacter;
 
 import com.example.rpg.enemy.Enemy;
+import com.example.rpg.enums.ClassType;
 import com.example.rpg.equipment.ChestArmor;
-import com.example.rpg.equipment.Equipment;
 import com.example.rpg.equipment.Weapon;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-public abstract class GameCharacter {
+public class GameCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    protected int health;
-    protected int maxHealth;
-    protected int mana;
-    protected int maxMana;
-    protected int force;
-    protected int dexterity;
-    protected int intelligence;
-    protected int constitution;
-    protected int wisdom;
-    protected int charisma;
+    protected int level = 1;
+    protected int hp = 50;
+    protected int maxHp = 50;
+    protected int mana = 30;
+    protected int maxMana = 30;
+    protected int force = 5;
+    protected int dexterity = 5;
+    protected int intelligence = 5;
+    protected int constitution = 5;
+    protected int wisdom = 5;
+    protected int charisma = 5;
+    protected int experience = 0;
+    protected int nextLevelExperience = 100;
     protected String name;
-    protected String charClass;
-    protected List<Equipment> inventory;
+    protected ClassType classType;
+    @ElementCollection
+    @CollectionTable(
+            name = "personagem_inventario", // Nome da tabela que será criada
+            joinColumns = @JoinColumn(name = "personagem_id") // FK apontando para o personagem
+    )
+    @Column(name = "equipment_id")
+    protected List<Long> inventory;
     @ManyToOne
     protected Weapon weapon;
     @ManyToOne
@@ -34,7 +43,7 @@ public abstract class GameCharacter {
 
     public GameCharacter(String name) {
         this.name = name;
-        this.charClass = getClass().getSimpleName();
+        this.classType = ClassType.Normal;
     }
 
     protected GameCharacter() {
@@ -44,9 +53,9 @@ public abstract class GameCharacter {
     public String toString() {
         return "character{" +
                 "Name='" + name + '\'' +
-                ", health=" + health +
+                ", health=" + hp +
                 ", mana=" + mana +
-                ", class=" + charClass +
+                ", class=" + classType +
                 '}';
     }
 
@@ -54,8 +63,8 @@ public abstract class GameCharacter {
 
     }
 
-    public int getHealth() {
-        return health;
+    public int getHp() {
+        return hp;
     }
 
     public int getMana() {
@@ -66,12 +75,12 @@ public abstract class GameCharacter {
         return name;
     }
 
-    public String getCharClass() {
-        return charClass;
+    public ClassType getClassType() {
+        return classType;
     }
 
-    protected void setCharClass(String charClass) {
-        this.charClass = charClass;
+    protected void setClassType(ClassType charClass) {
+        this.classType = charClass;
     }
 
     public int getForce() {
@@ -102,7 +111,87 @@ public abstract class GameCharacter {
         return maxMana;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
+    public void setForce(int force) {
+        this.force = force;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public void setConstitution(int constitution) {
+        this.constitution = constitution;
+    }
+
+    public void setWisdom(int wisdom) {
+        this.wisdom = wisdom;
+    }
+
+    public void setCharisma(int charisma) {
+        this.charisma = charisma;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setInventory(List<Long> inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
+    public void setChestArmor(ChestArmor chestArmor) {
+        this.chestArmor = chestArmor;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public int getNextLevelExperience() {
+        return nextLevelExperience;
+    }
+
+    public void setNextLevelExperience(int nextLevelExperience) {
+        this.nextLevelExperience = nextLevelExperience;
     }
 }
