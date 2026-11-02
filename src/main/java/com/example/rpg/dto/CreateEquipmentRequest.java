@@ -1,5 +1,6 @@
 package com.example.rpg.dto;
 
+import com.example.rpg.enums.EquipmentRarity;
 import com.example.rpg.enums.EquipmentType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,17 @@ public class CreateEquipmentRequest {
 
     public void setType(EquipmentType type) {
         this.type = type;
+    }
+
+    @NotNull(message = "rarity cannot be empty")
+    private EquipmentRarity rarity;
+
+    public EquipmentRarity getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(EquipmentRarity rarity) {
+        this.rarity = rarity;
     }
 
     private int requiredIntelligence;

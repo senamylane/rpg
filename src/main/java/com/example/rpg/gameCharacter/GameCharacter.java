@@ -1,20 +1,23 @@
 package com.example.rpg.gameCharacter;
 
-import com.example.rpg.enemy.Enemy;
 import com.example.rpg.enums.ClassType;
 import com.example.rpg.enums.EquipmentType;
+import com.example.rpg.enums.Zone;
 import com.example.rpg.equipment.ChestArmor;
 import com.example.rpg.equipment.Weapon;
+import com.example.rpg.gameElements.Combatant;
+import com.example.rpg.gameElements.Enemy;
 import jakarta.persistence.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class GameCharacter {
+public class GameCharacter implements Combatant {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    protected String name;
     protected int level = 1;
     protected int hp = 50;
     protected int maxHp = 50;
@@ -28,7 +31,6 @@ public class GameCharacter {
     protected int charisma = 5;
     protected int experience = 0;
     protected int nextLevelExperience = 100;
-    protected String name;
     protected ClassType classType;
     @ElementCollection
     @CollectionTable(
@@ -43,6 +45,9 @@ public class GameCharacter {
     protected Weapon weapon;
     @ManyToOne
     protected ChestArmor chestArmor;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    protected Zone currentZone = Zone.CAMP_SITE;
 
 
     public GameCharacter(String name) {
@@ -217,5 +222,35 @@ public class GameCharacter {
 
     public void setNextLevelExperience(int nextLevelExperience) {
         this.nextLevelExperience = nextLevelExperience;
+    }
+
+    public Zone getCurrentZone() {
+        return currentZone;
+    }
+
+    public void setCurrentZone(Zone currentZone) {
+        this.currentZone = currentZone;
+    }
+
+    public void addExperience(int amount) {
+        this.experience += amount;
+        if (this.experience >= this.nextLevelExperience) {
+            this.level += 1;
+        }
+    }
+
+    @Override
+    public void attack(Combatant target) {
+        target.takeDamage(5);
+    }
+
+    @Override
+    public void useSpell(Combatant target) {
+
+    }
+
+    @Override
+    public void takeDamage(int amount) {
+        this.hp -= amount;
     }
 }

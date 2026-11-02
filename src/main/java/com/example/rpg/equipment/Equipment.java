@@ -1,5 +1,6 @@
 package com.example.rpg.equipment;
 
+import com.example.rpg.enums.EquipmentRarity;
 import com.example.rpg.enums.EquipmentType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,17 +14,23 @@ public abstract class Equipment {
     protected Long id;
     protected String name;
     protected EquipmentType type;
+    protected EquipmentRarity rarity;
     protected String description;
     protected String imagePath;
     protected int requiredStrength = 1;
     protected int requiredDexterity = 1;
     protected int requiredIntelligence = 1;
 
-    public Equipment(String name, int requiredStrength, int requiredDexterity, int requiredIntelligence) {
+    public Equipment(String name, EquipmentType type, EquipmentRarity rarity, int requiredStrength, int requiredDexterity, int requiredIntelligence) {
         this.name = name;
         this.requiredStrength = requiredStrength;
         this.requiredDexterity = requiredDexterity;
         this.requiredIntelligence = requiredIntelligence;
+        this.rarity = rarity;
+        this.type = type;
+    }
+
+    protected Equipment() {
     }
 
     public String getName() {
@@ -88,5 +95,13 @@ public abstract class Equipment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public EquipmentRarity getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(EquipmentRarity rarity) {
+        this.rarity = rarity;
     }
 }

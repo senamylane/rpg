@@ -1,6 +1,7 @@
 package com.example.rpg.controllers;
 
 import com.example.rpg.dto.CreateEquipmentRequest;
+import com.example.rpg.enums.EquipmentRarity;
 import com.example.rpg.enums.EquipmentType;
 import com.example.rpg.equipment.*;
 import com.example.rpg.jpa.*;
@@ -54,6 +55,7 @@ public class EquipmentController {
         int requiredDexterity = Math.max(request.getAdditionalDexterity(), 1);
         int requiredIntelligence = Math.max(request.getRequiredIntelligence(), 1);
         int defense = Math.max(request.getDefense(), 1);
+        EquipmentRarity rarity = request.getRarity();
 
         switch (type) {
             case WEAPON -> {
@@ -65,25 +67,25 @@ public class EquipmentController {
                 if (minimunMagicDamage <= 0) {
                     throw new IllegalArgumentException("MinimumMagicDamage is required and must be greater than 0 for weapons.");
                 }
-                Weapon weapon = new Weapon(name, requiredStrength, requiredDexterity, requiredIntelligence, minimunMagicDamage, minimumDamage);
+                Weapon weapon = new Weapon(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence, minimunMagicDamage, minimumDamage);
                 return equipmentRepository.save(weapon);
             }
             case CHEST_ARMOR -> {
                 int additionalConstitution = request.getAdditionalConstitution();
 
-                ChestArmor armor = new ChestArmor(name, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalConstitution);
+                ChestArmor armor = new ChestArmor(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalConstitution);
                 return equipmentRepository.save(armor);
             }
             case BOOTS -> {
                 int additionalDexterity = request.getRequiredDexterity();
 
-                Boot armor = new Boot(name, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalDexterity);
+                Boot armor = new Boot(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalDexterity);
                 return equipmentRepository.save(armor);
             }
             case GLOVES -> {
                 int additionalWisdom = request.getAdditionalWisdom();
 
-                Gloves armor = new Gloves(name, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalWisdom);
+                Gloves armor = new Gloves(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence, defense, additionalWisdom);
                 return equipmentRepository.save(armor);
             }
         }
@@ -107,5 +109,5 @@ public class EquipmentController {
         return equipmentRepository.findByNameIgnoreCase(name);
     }
 
-    
+
 }

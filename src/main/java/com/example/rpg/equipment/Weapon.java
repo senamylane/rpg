@@ -1,5 +1,7 @@
 package com.example.rpg.equipment;
 
+import com.example.rpg.enums.EquipmentRarity;
+import com.example.rpg.enums.EquipmentType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 
@@ -13,8 +15,8 @@ public class Weapon extends Equipment {
     protected int minimumMagicDamage;
     protected int maximumMagicDamage;
 
-    public Weapon(String name, int requiredStrength, int requiredDexterity, int requiredIntelligence, int minimumMagicDamage, int minimumDamage) {
-        super(name, requiredStrength, requiredDexterity, requiredIntelligence);
+    public Weapon(String name, EquipmentType type, EquipmentRarity rarity, int requiredStrength, int requiredDexterity, int requiredIntelligence, int minimumMagicDamage, int minimumDamage) {
+        super(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence);
 
         this.minimumMagicDamage = minimumMagicDamage;
         int variation = ThreadLocalRandom.current().nextInt(1, 11);
@@ -26,7 +28,7 @@ public class Weapon extends Equipment {
     }
 
     protected Weapon() {
-        super("", 1, 1, 1);
+        super();
     }
 
     @Override

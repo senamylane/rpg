@@ -1,5 +1,7 @@
 package com.example.rpg.equipment;
 
+import com.example.rpg.enums.EquipmentRarity;
+import com.example.rpg.enums.EquipmentType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 
@@ -8,13 +10,13 @@ import jakarta.persistence.Entity;
 public class ChestArmor extends Armor {
     protected int additionalConstitution;
 
-    public ChestArmor(String name, int requiredStrength, int requiredDexterity, int requiredIntelligence, int defense, int additionalConstitution) {
-        super(name, requiredStrength, requiredDexterity, requiredIntelligence, defense);
+    public ChestArmor(String name, EquipmentType type, EquipmentRarity rarity, int requiredStrength, int requiredDexterity, int requiredIntelligence, int defense, int additionalConstitution) {
+        super(name, type, rarity, requiredStrength, requiredDexterity, requiredIntelligence, defense);
         this.additionalConstitution = additionalConstitution;
     }
 
     protected ChestArmor() {
-        super("", 1, 1, 1, 1);
+        super();
     }
 
     public int getAdditionalConstitution() {
