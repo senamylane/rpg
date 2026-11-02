@@ -106,4 +106,6 @@ public class EquipmentController {
         // This returns a JSON or XML with the users
         return equipmentRepository.findByNameIgnoreCase(name);
     }
+
+    
 }

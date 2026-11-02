@@ -3,7 +3,7 @@ package com.example.rpg.equipment;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 
-@JsonPropertyOrder({"name", "defense", "additionalConstitution"})
+@JsonPropertyOrder({"id", "name", "defense", "additionalConstitution"})
 @Entity
 public class ChestArmor extends Armor {
     protected int additionalConstitution;

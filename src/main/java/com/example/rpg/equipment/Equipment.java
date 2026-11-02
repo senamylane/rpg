@@ -1,5 +1,6 @@
 package com.example.rpg.equipment;
 
+import com.example.rpg.enums.EquipmentType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +12,7 @@ public abstract class Equipment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     protected String name;
+    protected EquipmentType type;
     protected String description;
     protected String imagePath;
     protected int requiredStrength = 1;
@@ -70,5 +72,21 @@ public abstract class Equipment {
 
     public void setRequiredIntelligence(int requiredIntelligence) {
         this.requiredIntelligence = requiredIntelligence;
+    }
+
+    public EquipmentType getType() {
+        return type;
+    }
+
+    public void setType(EquipmentType type) {
+        this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

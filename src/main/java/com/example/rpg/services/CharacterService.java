@@ -4,15 +4,15 @@ import com.example.rpg.gameCharacter.GameCharacter;
 import com.example.rpg.jpa.CharacterRepository;
 import com.example.rpg.jpa.EquipmentRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CharacterService {
-    private final CharacterRepository characterRepository;
-    private final EquipmentRepository equipmentRepository;
-
-    public CharacterService(CharacterRepository characterRepository, EquipmentRepository equipmentRepository) {
-        this.characterRepository = characterRepository;
-        this.equipmentRepository = equipmentRepository;
-    }
+    @Autowired
+    private CharacterRepository characterRepository;
+    @Autowired
+    private EquipmentRepository equipmentRepository;
 
     @Transactional
     public GameCharacter processLevelUp(Long characterId) {

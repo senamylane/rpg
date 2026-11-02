@@ -2,11 +2,13 @@ package com.example.rpg.gameCharacter;
 
 import com.example.rpg.enemy.Enemy;
 import com.example.rpg.enums.ClassType;
+import com.example.rpg.enums.EquipmentType;
 import com.example.rpg.equipment.ChestArmor;
 import com.example.rpg.equipment.Weapon;
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class GameCharacter {
@@ -30,11 +32,13 @@ public class GameCharacter {
     protected ClassType classType;
     @ElementCollection
     @CollectionTable(
-            name = "personagem_inventario", // Nome da tabela que será criada
-            joinColumns = @JoinColumn(name = "personagem_id") // FK apontando para o personagem
+            name = "personagem_inventario",
+            joinColumns = @JoinColumn(name = "personagem_id")
     )
-    @Column(name = "equipment_id")
-    protected List<Long> inventory;
+    @MapKeyColumn(name = "equipment_id") // Creates the ID column (the Map Key)
+    @Column(name = "equipment_type")     // Creates the Type column (the Map Value)
+    @Enumerated(EnumType.STRING)
+    private Map<Long, EquipmentType> inventory = new HashMap<>();
     @ManyToOne
     protected Weapon weapon;
     @ManyToOne
@@ -167,8 +171,28 @@ public class GameCharacter {
         this.name = name;
     }
 
-    public void setInventory(List<Long> inventory) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Map<Long, EquipmentType> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Map<Long, EquipmentType> inventory) {
         this.inventory = inventory;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public ChestArmor getChestArmor() {
+        return chestArmor;
     }
 
     public void setWeapon(Weapon weapon) {

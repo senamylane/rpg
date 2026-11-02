@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@JsonPropertyOrder({"name", "minimumDamage", "maximumDamage", "minimumMagicDamage", "maximumMagicDamage"})
+@JsonPropertyOrder({"id", "name", "minimumDamage", "maximumDamage", "minimumMagicDamage", "maximumMagicDamage"})
 @Entity
 public class Weapon extends Equipment {
     protected int minimumDamage;
