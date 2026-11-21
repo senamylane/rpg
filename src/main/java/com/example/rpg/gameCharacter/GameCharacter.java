@@ -1,30 +1,33 @@
 package com.example.rpg.gameCharacter;
 
-import com.example.rpg.enemy.Enemy;
-import jakarta.persistence.Entity;
+import com.example.rpg.enums.Spell;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+@MappedSuperclass
 public abstract class GameCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    protected int health;
-    protected int mana;
-    protected int force;
-    protected int dexterity;
-    protected int intelligence;
-    protected int constitution;
-    protected int wisdom;
-    protected int charisma;
     protected String name;
-    protected String charClass;
+    protected int level = 1;
+    protected int hp = 50;
+    protected int maxHp = 50;
+    protected int mana = 30;
+    protected int maxMana = 30;
+    protected int attack = 10;
+    protected int defense = 10;
+    protected int magic = 10;
+    protected int resistance = 10;
 
-    public GameCharacter(String name) {
+    protected GameCharacter(String name) {
         this.name = name;
-        this.charClass = getClass().getSimpleName();
     }
 
     protected GameCharacter() {
@@ -34,93 +37,136 @@ public abstract class GameCharacter {
     public String toString() {
         return "character{" +
                 "Name='" + name + '\'' +
-                ", health=" + health +
+                ", health=" + hp +
                 ", mana=" + mana +
-                ", class=" + charClass +
                 '}';
     }
 
-    public void attack(Enemy enemy) {
 
+    public int getAttack() {
+        return attack;
     }
 
-    public int getHealth() {
-        return health;
+    public void setAttack(int damage) {
+        this.attack = damage;
     }
 
-    protected void setHealth(int health) {
-        this.health = health;
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public int getHp() {
+        return hp;
     }
 
     public int getMana() {
         return mana;
     }
 
-    protected void setMana(int mana) {
-        this.mana = mana;
-    }
-
     public String getName() {
         return name;
     }
 
-    protected void setName(String name) {
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = Math.min(level, 100);
+    }
+
+    public void setHp(int hp) {
+        this.hp = Math.max(hp, 0);
+        this.hp = Math.min(this.hp, this.maxHp);
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public void setMana(int mana) {
+        this.mana = Math.max(mana, 0);
+        this.mana = Math.min(this.mana, this.maxMana);
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getCharClass() {
-        return charClass;
+    public Long getId() {
+        return id;
     }
 
-    protected void setCharClass(String charClass) {
-        this.charClass = charClass;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getForce() {
-        return force;
+    public int getMagic() {
+        return magic;
     }
 
-    public void setForce(int force) {
-        this.force = force;
+    public void setMagic(int magic) {
+        this.magic = magic;
     }
 
-    public int getDexterity() {
-        return dexterity;
+    public int getResistance() {
+        return resistance;
     }
 
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
+    public void setResistance(int resistance) {
+        this.resistance = resistance;
     }
 
-    public int getIntelligence() {
-        return intelligence;
+    public void attack(GameCharacter target) {
+        float damage = 1.5f * this.attack - target.defense;
+        float variation = ThreadLocalRandom.current().nextFloat(0.8f, 1.201f);
+        int finalDamage = (int) (damage * variation) + this.level;
+        target.takeDamage(finalDamage);
     }
 
-    public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
+
+    public void useSpell(Spell spell, List<GameCharacter> target) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
     }
 
-    public int getConstitution() {
-        return constitution;
+    public void takeDamage(float amount) {
+        if (amount <= 0) {
+            return;
+        }
+        int newHp = this.hp - (int) amount;
+        this.setHp(newHp);
     }
 
-    public void setConstitution(int constitution) {
-        this.constitution = constitution;
+    public void takeBreath() {
+        this.heal(this, 30);
+        this.healMana(this, 15);
     }
 
-    public int getWisdom() {
-        return wisdom;
+    protected void heal(GameCharacter target, int amount) {
+        target.setHp(target.getHp() + amount);
     }
 
-    public void setWisdom(int wisdom) {
-        this.wisdom = wisdom;
+    protected void healMana(GameCharacter target, int amount) {
+        target.setMana(target.getMaxMana() + amount);
     }
 
-    public int getCharisma() {
-        return charisma;
-    }
-
-    public void setCharisma(int charisma) {
-        this.charisma = charisma;
+    public void focus() {
+        this.setLevel(this.level + 1);
     }
 }
