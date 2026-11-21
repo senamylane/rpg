@@ -1,6 +1,8 @@
 package com.example.rpg.dto;
 
+import com.example.rpg.enums.ClassType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class CreateCharacterRequest {
@@ -16,4 +18,14 @@ public class CreateCharacterRequest {
         this.name = name;
     }
 
+    @NotNull
+    private ClassType classType;
+
+    public ClassType classType() {
+        return classType;
+    }
+
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
+    }
 }

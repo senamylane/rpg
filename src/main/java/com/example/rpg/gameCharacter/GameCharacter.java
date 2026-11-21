@@ -1,19 +1,17 @@
 package com.example.rpg.gameCharacter;
 
-import com.example.rpg.enums.ClassType;
-import com.example.rpg.enums.EquipmentType;
-import com.example.rpg.enums.Zone;
-import com.example.rpg.equipment.ChestArmor;
-import com.example.rpg.equipment.Weapon;
-import com.example.rpg.gameElements.Combatant;
-import com.example.rpg.gameElements.Enemy;
-import jakarta.persistence.*;
+import com.example.rpg.enums.Spell;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
-@Entity
-public class GameCharacter implements Combatant {
+@MappedSuperclass
+public abstract class GameCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,36 +21,13 @@ public class GameCharacter implements Combatant {
     protected int maxHp = 50;
     protected int mana = 30;
     protected int maxMana = 30;
-    protected int force = 5;
-    protected int dexterity = 5;
-    protected int intelligence = 5;
-    protected int constitution = 5;
-    protected int wisdom = 5;
-    protected int charisma = 5;
-    protected int experience = 0;
-    protected int nextLevelExperience = 100;
-    protected ClassType classType;
-    @ElementCollection
-    @CollectionTable(
-            name = "personagem_inventario",
-            joinColumns = @JoinColumn(name = "personagem_id")
-    )
-    @MapKeyColumn(name = "equipment_id") // Creates the ID column (the Map Key)
-    @Column(name = "equipment_type")     // Creates the Type column (the Map Value)
-    @Enumerated(EnumType.STRING)
-    private Map<Long, EquipmentType> inventory = new HashMap<>();
-    @ManyToOne
-    protected Weapon weapon;
-    @ManyToOne
-    protected ChestArmor chestArmor;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    protected Zone currentZone = Zone.CAMP_SITE;
+    protected int attack = 10;
+    protected int defense = 10;
+    protected int magic = 10;
+    protected int resistance = 10;
 
-
-    public GameCharacter(String name) {
+    protected GameCharacter(String name) {
         this.name = name;
-        this.classType = ClassType.Normal;
     }
 
     protected GameCharacter() {
@@ -64,12 +39,24 @@ public class GameCharacter implements Combatant {
                 "Name='" + name + '\'' +
                 ", health=" + hp +
                 ", mana=" + mana +
-                ", class=" + classType +
                 '}';
     }
 
-    public void attack(Enemy enemy) {
 
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int damage) {
+        this.attack = damage;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 
     public int getHp() {
@@ -82,38 +69,6 @@ public class GameCharacter implements Combatant {
 
     public String getName() {
         return name;
-    }
-
-    public ClassType getClassType() {
-        return classType;
-    }
-
-    protected void setClassType(ClassType charClass) {
-        this.classType = charClass;
-    }
-
-    public int getForce() {
-        return force;
-    }
-
-    public int getDexterity() {
-        return dexterity;
-    }
-
-    public int getIntelligence() {
-        return intelligence;
-    }
-
-    public int getConstitution() {
-        return constitution;
-    }
-
-    public int getWisdom() {
-        return wisdom;
-    }
-
-    public int getCharisma() {
-        return charisma;
     }
 
     public int getMaxMana() {
@@ -129,11 +84,12 @@ public class GameCharacter implements Combatant {
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.level = Math.min(level, 100);
     }
 
     public void setHp(int hp) {
-        this.hp = hp;
+        this.hp = Math.max(hp, 0);
+        this.hp = Math.min(this.hp, this.maxHp);
     }
 
     public void setMaxHp(int maxHp) {
@@ -141,35 +97,12 @@ public class GameCharacter implements Combatant {
     }
 
     public void setMana(int mana) {
-        this.mana = mana;
+        this.mana = Math.max(mana, 0);
+        this.mana = Math.min(this.mana, this.maxMana);
     }
 
     public void setMaxMana(int maxMana) {
         this.maxMana = maxMana;
-    }
-
-    public void setForce(int force) {
-        this.force = force;
-    }
-
-    public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
-    }
-
-    public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
-    }
-
-    public void setConstitution(int constitution) {
-        this.constitution = constitution;
-    }
-
-    public void setWisdom(int wisdom) {
-        this.wisdom = wisdom;
-    }
-
-    public void setCharisma(int charisma) {
-        this.charisma = charisma;
     }
 
     public void setName(String name) {
@@ -184,73 +117,56 @@ public class GameCharacter implements Combatant {
         this.id = id;
     }
 
-    public Map<Long, EquipmentType> getInventory() {
-        return inventory;
+    public int getMagic() {
+        return magic;
     }
 
-    public void setInventory(Map<Long, EquipmentType> inventory) {
-        this.inventory = inventory;
+    public void setMagic(int magic) {
+        this.magic = magic;
     }
 
-    public Weapon getWeapon() {
-        return weapon;
+    public int getResistance() {
+        return resistance;
     }
 
-    public ChestArmor getChestArmor() {
-        return chestArmor;
+    public void setResistance(int resistance) {
+        this.resistance = resistance;
     }
 
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
+    public void attack(GameCharacter target) {
+        float damage = 1.5f * this.attack - target.defense;
+        float variation = ThreadLocalRandom.current().nextFloat(0.8f, 1.201f);
+        int finalDamage = (int) (damage * variation) + this.level;
+        target.takeDamage(finalDamage);
     }
 
-    public void setChestArmor(ChestArmor chestArmor) {
-        this.chestArmor = chestArmor;
+
+    public void useSpell(Spell spell, List<GameCharacter> target) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
     }
 
-    public int getExperience() {
-        return experience;
-    }
-
-    public void setExperience(int experience) {
-        this.experience = experience;
-    }
-
-    public int getNextLevelExperience() {
-        return nextLevelExperience;
-    }
-
-    public void setNextLevelExperience(int nextLevelExperience) {
-        this.nextLevelExperience = nextLevelExperience;
-    }
-
-    public Zone getCurrentZone() {
-        return currentZone;
-    }
-
-    public void setCurrentZone(Zone currentZone) {
-        this.currentZone = currentZone;
-    }
-
-    public void addExperience(int amount) {
-        this.experience += amount;
-        if (this.experience >= this.nextLevelExperience) {
-            this.level += 1;
+    public void takeDamage(float amount) {
+        if (amount <= 0) {
+            return;
         }
+        int newHp = this.hp - (int) amount;
+        this.setHp(newHp);
     }
 
-    @Override
-    public void attack(Combatant target) {
-        target.takeDamage(5);
+    public void takeBreath() {
+        this.heal(this, 30);
+        this.healMana(this, 15);
     }
 
-    @Override
-    public void useSpell(Combatant target) {
-
+    protected void heal(GameCharacter target, int amount) {
+        target.setHp(target.getHp() + amount);
     }
 
-    @Override
-    public void takeDamage(int amount) {
-        this.hp -= amount;
+    protected void healMana(GameCharacter target, int amount) {
+        target.setMana(target.getMaxMana() + amount);
+    }
+
+    public void focus() {
+        this.setLevel(this.level + 1);
     }
 }

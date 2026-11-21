@@ -2,7 +2,8 @@ package com.example.rpg.gameElements;
 
 import com.example.rpg.enums.BattleStatus;
 import com.example.rpg.enums.Turn;
-import com.example.rpg.gameCharacter.GameCharacter;
+import com.example.rpg.gameCharacter.Enemy;
+import com.example.rpg.gameCharacter.Hero;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ public class Battle {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "character_id")
-    private GameCharacter player;
+    private Hero player;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "battle_id")
     private List<Enemy> enemies = new ArrayList<>();
@@ -33,7 +34,7 @@ public class Battle {
     public Battle() {
     }
 
-    public Battle(GameCharacter player, List<Enemy> enemies) {
+    public Battle(Hero player, List<Enemy> enemies) {
         this.player = player;
         this.enemies = enemies;
     }
@@ -46,11 +47,11 @@ public class Battle {
         this.id = id;
     }
 
-    public GameCharacter getPlayer() {
+    public Hero getPlayer() {
         return player;
     }
 
-    public void setPlayer(GameCharacter player) {
+    public void setPlayer(Hero player) {
         this.player = player;
     }
 
@@ -88,5 +89,9 @@ public class Battle {
 
     public boolean isFinished() {
         return status != BattleStatus.IN_PROGRESS;
+    }
+
+    public void clearEnemies() {
+        this.enemies.clear();
     }
 }

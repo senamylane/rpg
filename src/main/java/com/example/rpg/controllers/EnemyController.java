@@ -3,7 +3,7 @@ package com.example.rpg.controllers;
 import com.example.rpg.dto.CreateEnemyRequest;
 import com.example.rpg.enums.EnemyRank;
 import com.example.rpg.enums.Zone;
-import com.example.rpg.gameElements.Enemy;
+import com.example.rpg.gameCharacter.Enemy;
 import com.example.rpg.jpa.EnemyRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

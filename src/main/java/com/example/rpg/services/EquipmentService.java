@@ -2,7 +2,7 @@ package com.example.rpg.services;
 
 import com.example.rpg.enums.EquipmentType;
 import com.example.rpg.equipment.Equipment;
-import com.example.rpg.gameCharacter.GameCharacter;
+import com.example.rpg.gameCharacter.Hero;
 import com.example.rpg.jpa.*;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class EquipmentService {
 
     @Transactional
     public boolean pickUpItem(Long character_id, Long equipment_id, EquipmentType type) {
-        GameCharacter character = characterRepository.findById(character_id).orElse(null);
+        Hero character = characterRepository.findById(character_id).orElse(null);
         if (character == null) {
             return false;
         }
@@ -49,18 +49,18 @@ public class EquipmentService {
             return false;
         }
 
-        character.getInventory().put(equipment_id, type);
+        character.inventory().put(equipment_id, type);
 
         return true;
     }
 
     @Transactional
     public boolean dropItem(Long character_id, Long equipment_id, EquipmentType type) {
-        GameCharacter character = characterRepository.findById(character_id).orElse(null);
+        Hero character = characterRepository.findById(character_id).orElse(null);
         if (character == null) {
             return false;
         }
-        boolean removed = character.getInventory().remove(equipment_id, type);
+        boolean removed = character.inventory().remove(equipment_id, type);
 
         if (!removed) {
             return false; // The character didn't actually have this specific item
@@ -73,12 +73,12 @@ public class EquipmentService {
     }
 
     public List<Equipment> getCharacterInventory(Long character_id) {
-        GameCharacter character = characterRepository.findById(character_id).orElse(null);
+        Hero character = characterRepository.findById(character_id).orElse(null);
         List<Equipment> fullInventory = new ArrayList<>();
         if (character == null) {
             return fullInventory;
         }
-        Map<Long, EquipmentType> inventoryIds = character.getInventory();
+        Map<Long, EquipmentType> inventoryIds = character.inventory();
         log.info(inventoryIds);
 
         // If the list is empty, return immediately to save database calls

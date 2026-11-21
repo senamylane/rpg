@@ -2,16 +2,20 @@ package com.example.rpg.controllers;
 
 import com.example.rpg.dto.CreateCharacterRequest;
 import com.example.rpg.dto.PickUpEquipmentRequest;
+import com.example.rpg.enums.Zone;
 import com.example.rpg.equipment.Equipment;
-import com.example.rpg.gameCharacter.GameCharacter;
+import com.example.rpg.gameCharacter.Hero;
+import com.example.rpg.gameCharacter.Warrior;
 import com.example.rpg.jpa.CharacterRepository;
 import com.example.rpg.services.EquipmentService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController // This means that this class is a Controller
 @RequestMapping(path = "/character") // This means URL's start with /demo (after Application path)
@@ -24,36 +28,42 @@ public class GameCharacterController {
 
     @PostMapping(path = "/create") // Map ONLY POST Requests
     @Transactional
-    public @ResponseBody GameCharacter addNewUser(@Valid @RequestBody CreateCharacterRequest request) {
+    public @ResponseBody Hero addNewUser(@Valid @RequestBody CreateCharacterRequest request) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
         String name = request.getName();
-        GameCharacter n = new GameCharacter(name);
+        Hero n = Hero.getClass(request.classType(), name);
 
         return characterRepository.save(n);
     }
 
     @PostMapping(path = "/update") // Map ONLY POST Requests
     @Transactional
-    public @ResponseBody GameCharacter updateCharacter(@Valid @RequestBody CreateCharacterRequest request) {
+    public @ResponseBody Hero updateCharacter(@Valid @RequestBody CreateCharacterRequest request) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
         String name = request.getName();
-        GameCharacter n = new GameCharacter(name);
+        Hero n = new Warrior(name);
 
         return characterRepository.save(n);
     }
 
     @GetMapping(path = "/all")
-    public @ResponseBody Iterable<GameCharacter> getAllUsers() {
+    public @ResponseBody Iterable<Hero> getAllUsers() {
         // This returns a JSON or XML with the users
         return characterRepository.findAll();
     }
 
     @GetMapping(path = "/find")
-    public @ResponseBody List<GameCharacter> getCharacterByName(@RequestParam String name) {
+    public @ResponseBody List<Hero> getCharacterByName(@RequestParam String name) {
         // This returns a JSON or XML with the users
         return characterRepository.findByNameIgnoreCase(name);
+    }
+
+    @GetMapping(path = "/{character_id}")
+    public @ResponseBody Optional<Hero> getCharacterByName(@PathVariable Long character_id) {
+        // This returns a JSON or XML with the users
+        return characterRepository.findById(character_id);
     }
 
     @GetMapping(path = "/inventory")
@@ -69,5 +79,32 @@ public class GameCharacterController {
     @PostMapping(path = "/dropItem")
     public @ResponseBody boolean dropItem(@Valid @RequestBody PickUpEquipmentRequest request) {
         return equipmentService.dropItem(request.getCharacter_id(), request.getEquipment_id(), request.getType());
+    }
+
+    @PostMapping(path = "/{characterId}/change-zone/{zone}")
+    public @ResponseBody ResponseEntity<Boolean> changeZone(@PathVariable Long characterId, @PathVariable Zone zone) {
+        Hero player = characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("Character not found with ID: " + characterId));
+        player.setCurrentZone(zone);
+        characterRepository.save(player);
+        return ResponseEntity.status(200).body(true);
+    }
+
+    @PostMapping(path = "/{characterId}/revive")
+    public @ResponseBody ResponseEntity<Boolean> revive(@PathVariable Long characterId) {
+        Hero player = characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("Character not found with ID: " + characterId));
+        player.revive();
+        characterRepository.save(player);
+        return ResponseEntity.status(200).body(true);
+    }
+
+    @PostMapping(path = "/{characterId}/take-breath")
+    public @ResponseBody Hero take_breath(@PathVariable Long characterId) {
+        Hero player = characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("Character not found with ID: " + characterId));
+        player.takeBreath();
+        characterRepository.save(player);
+        return player;
     }
 }

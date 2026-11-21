@@ -1,7 +1,7 @@
 package com.example.rpg.services;
 
 import com.example.rpg.enums.EnemyRank;
-import com.example.rpg.gameElements.Enemy;
+import com.example.rpg.gameCharacter.Enemy;
 import com.example.rpg.jpa.EnemyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

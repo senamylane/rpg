@@ -1,9 +1,11 @@
 package com.example.rpg.gameElements;
 
+import com.example.rpg.gameCharacter.GameCharacter;
+
 public interface Combatant {
-    void attack(Combatant target);
+    void attack(GameCharacter target);
 
-    void useSpell(Combatant target);
+    void useSpell(GameCharacter target);
 
-    void takeDamage(int amount);
+    void takeDamage(float amount);
 }

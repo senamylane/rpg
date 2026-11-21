@@ -1,7 +1,7 @@
 package com.example.rpg.jpa;
 
 import com.example.rpg.enums.Zone;
-import com.example.rpg.gameElements.Enemy;
+import com.example.rpg.gameCharacter.Enemy;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
